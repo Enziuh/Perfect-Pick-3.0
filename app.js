@@ -97,8 +97,9 @@
     if (seasonBody) {
       seasonBody.innerHTML = (prizes.overallStandings || []).map(p => {
         const est = seasonWinnings.get(p.name);
+        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
         return `
-          <tr>
+          <tr class="${rankClass}">
             <td><span class="rank-badge">${p.rank}</span></td>
             <td class="player-name-cell">${escapeHtml(p.name)}</td>
             <td class="num"><strong>${p.points}</strong></td>
@@ -408,14 +409,17 @@
 
     const standingsBody = $('weeklyStandingsBody');
     if (standingsBody) {
-      standingsBody.innerHTML = (weekData?.standings || []).map(p => `
-        <tr>
+      standingsBody.innerHTML = (weekData?.standings || []).map(p => {
+        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
+        return `
+        <tr class="${rankClass}">
           <td><span class="rank-badge">${p.rank}</span></td>
           <td class="player-name-cell">${escapeHtml(p.name)}</td>
           <td class="num"><strong>${p.points}</strong></td>
           <td class="num">${p.completedGames}</td>
         </tr>
-      `).join('') || '<tr><td colspan="4">No submissions yet.</td></tr>';
+      `;
+      }).join('') || '<tr><td colspan="4">No submissions yet.</td></tr>';
     }
 
     renderGameResultsInto_('weeklyGameResults', weekData, false);

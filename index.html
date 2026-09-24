@@ -8,7 +8,7 @@
 </head>
 <body>
   <main class="shell">
-    <header class="hero">
+    <header class="hero site-hero">
       <div class="brand">
         <div class="eyebrow">NFL Pick'Em</div>
         <h1>Perfect Pick 3.0</h1>
@@ -67,6 +67,13 @@
     </section>
 
     <section id="picks" class="tab-panel">
+      <div class="picks-banner">
+        <div>
+          <div class="eyebrow">Weekly picks</div>
+          <h2>See Who Picked Who</h2>
+          <p>Compare player picks, matchup voting, and finalized winners at a glance.</p>
+        </div>
+      </div>
       <div class="panel picks-toolbar">
         <div>
           <div class="eyebrow">Weekly voting</div>
@@ -218,8 +225,12 @@
             <span class="pill old">LEGACY</span>
           </div>
           <div class="rule-copy">
-            <p>The original/legacy rules have not been added to this dashboard yet.</p>
-            <p>Once the original rules are provided, they can be displayed here alongside the New Rules without changing any historical period data.</p>
+            <p><strong>Weekly entry:</strong> $5 per active player.</p>
+            <p><strong>Perfect Pick:</strong> A player had to correctly pick every game that week to win the weekly pot.</p>
+            <p><strong>If one player got a Perfect Pick:</strong> That player won the full weekly pot.</p>
+            <p><strong>If multiple players got a Perfect Pick:</strong> They split the weekly pot evenly.</p>
+            <p><strong>If nobody got a Perfect Pick:</strong> The entire weekly pot went directly into the End-of-Season Pot.</p>
+            <p><strong>No monthly payout:</strong> Under the Old Rules there was no monthly standings prize or 70/30 monthly split.</p>
           </div>
         </article>
       </div>
@@ -268,6 +279,10 @@
         <details>
           <summary>Where can I see which rule set is being used?</summary>
           <p>Open the Prizes tab. Each prize period shows both Old and New rule options, with the active rule set highlighted.</p>
+        </details>
+        <details>
+          <summary>What is the difference between the Old and New Rules?</summary>
+          <p>Both rule sets pay the weekly pot for a Perfect Pick. Under the Old Rules, a week with no Perfect Pick sends the entire weekly pot directly to the End-of-Season Pot. Under the New Rules, that weekly pot rolls into the Monthly Pot; 70% of the monthly pot becomes the monthly standings prize pool and 30% goes to the End-of-Season Pot.</p>
         </details>
         <details>
           <summary>What happens if players are tied?</summary>

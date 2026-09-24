@@ -810,3 +810,100 @@ details p{color:var(--muted);line-height:1.6;margin-bottom:4px}
     grid-template-columns:1fr;
   }
 }
+
+
+/* ===== Visual refresh ===== */
+
+/* Main header banner */
+.site-hero{
+  position:relative;
+  overflow:hidden;
+  margin-bottom:20px;
+  padding:30px 32px;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(31,155,115,.30), transparent 30%),
+    linear-gradient(125deg,#122038 0%,#172940 58%,#0f6c59 135%);
+  box-shadow:0 18px 44px rgba(21,32,51,.14);
+}
+.site-hero .eyebrow{
+  color:#83e0bf;
+}
+.site-hero h1{
+  color:#fff;
+}
+.site-hero .status{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.18);
+  color:#e8fff7;
+}
+.site-hero + .nav{
+  margin-top:0;
+}
+
+/* Picks page gets a little more energy without making the table busy */
+.picks-banner{
+  position:relative;
+  overflow:hidden;
+  margin-bottom:14px;
+  padding:20px 22px;
+  border-radius:18px;
+  border:1px solid #cfe5dc;
+  background:
+    radial-gradient(circle at 92% 20%, rgba(20,122,95,.18), transparent 28%),
+    linear-gradient(120deg,#f7fffb 0%,#eef8ff 100%);
+}
+.picks-banner h2{
+  margin:4px 0 6px;
+  color:var(--text);
+}
+.picks-banner p{
+  margin:0;
+  color:var(--muted);
+}
+
+/* Top-three standings treatment */
+.standings-table tbody tr.rank-first{
+  background:linear-gradient(90deg,#fff8dc 0%,#fffdf3 100%);
+}
+.standings-table tbody tr.rank-second{
+  background:linear-gradient(90deg,#f2f5f8 0%,#fbfcfd 100%);
+}
+.standings-table tbody tr.rank-third{
+  background:linear-gradient(90deg,#fff2e8 0%,#fffaf6 100%);
+}
+.standings-table tbody tr.rank-first:hover{
+  background:linear-gradient(90deg,#fff4c2 0%,#fffbea 100%);
+}
+.standings-table tbody tr.rank-second:hover{
+  background:linear-gradient(90deg,#e9eef3 0%,#f7f9fb 100%);
+}
+.standings-table tbody tr.rank-third:hover{
+  background:linear-gradient(90deg,#ffe9d8 0%,#fff6ef 100%);
+}
+.rank-first .rank-badge{
+  background:#d9a900;
+  border-color:#d9a900;
+  color:#fff;
+}
+.rank-second .rank-badge{
+  background:#8b98a7;
+  border-color:#8b98a7;
+  color:#fff;
+}
+.rank-third .rank-badge{
+  background:#b86b3f;
+  border-color:#b86b3f;
+  color:#fff;
+}
+.rank-first .player-name-cell,
+.rank-second .player-name-cell,
+.rank-third .player-name-cell{
+  font-weight:900;
+}
+@media(max-width:700px){
+  .site-hero{
+    padding:24px 20px;
+    border-radius:18px;
+  }
+}
