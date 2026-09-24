@@ -179,8 +179,9 @@
     if (body) {
       body.innerHTML = (period.standings || []).map(p => {
         const est = winnings.get(p.name);
+        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
         return `
-          <tr>
+          <tr class="${rankClass}">
             <td><span class="rank-badge">${p.rank}</span></td>
             <td class="player-name-cell">${escapeHtml(p.name)}</td>
             <td class="num"><strong>${p.points}</strong></td>
