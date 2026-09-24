@@ -156,8 +156,13 @@
         <div class="period-grid">
           <div><span>Weeks</span><strong>${p.startWeek}–${p.endWeek}</strong></div>
           <div><span>Monthly Pot</span><strong>${money(p.monthlyPot)}</strong></div>
-          <div><span>Winner Pool</span><strong>${money(p.monthlyWinnerPool)}</strong></div>
-          <div><span>Season Contribution</span><strong>${money(p.seasonContribution)}</strong></div>
+          <div><span>Monthly Prize Pool (70%)</span><strong>${money(p.monthlyWinnerPool)}</strong></div>
+          <div><span>Season Contribution (30%)</span><strong>${money(p.seasonContribution)}</strong></div>
+        </div>
+        <div class="monthly-payout-strip">
+          <span><small>1st</small><strong>${money((p.monthlyWinnerPool || 0) * 0.60)}</strong></span>
+          <span><small>2nd</small><strong>${money((p.monthlyWinnerPool || 0) * 0.25)}</strong></span>
+          <span><small>3rd</small><strong>${money((p.monthlyWinnerPool || 0) * 0.15)}</strong></span>
         </div>
         <p class="muted">
           ${p.leaders.length

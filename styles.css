@@ -780,3 +780,33 @@ details p{color:var(--muted);line-height:1.6;margin-bottom:4px}
     padding:0 6px;
   }
 }
+
+.monthly-payout-strip{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.monthly-payout-strip span{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fafbfd;
+}
+.monthly-payout-strip small{
+  color:var(--muted);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.monthly-payout-strip strong{
+  color:var(--text);
+}
+@media(max-width:520px){
+  .monthly-payout-strip{
+    grid-template-columns:1fr;
+  }
+}
