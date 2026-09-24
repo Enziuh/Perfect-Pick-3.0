@@ -110,18 +110,68 @@
     }
   }
 
+  function calculateRankedPayoutsClient_(standings, prizePool) {
+    const rows = Array.isArray(standings) ? standings : [];
+    const pool = Number(prizePool || 0);
+    if (!rows.length || pool <= 0) return [];
+
+    const pctByPosition = { 1: 60, 2: 25, 3: 15 };
+    const payouts = [];
+    let i = 0;
+
+    while (i < rows.length) {
+      const points = Number(rows[i].points || 0);
+      const group = [];
+      let j = i;
+
+      while (j < rows.length && Number(rows[j].points || 0) === points) {
+        group.push(rows[j]);
+        j++;
+      }
+
+      const startPosition = i + 1;
+      let combinedPct = 0;
+      for (let pos = startPosition; pos < startPosition + group.length; pos++) {
+        combinedPct += pctByPosition[pos] || 0;
+      }
+
+      const groupCents = Math.round(pool * combinedPct);
+      const baseCents = group.length ? Math.floor(groupCents / group.length) : 0;
+      const remainder = group.length ? groupCents - (baseCents * group.length) : 0;
+
+      group.forEach((player, index) => {
+        payouts.push({
+          name: player.name,
+          rank: player.rank,
+          points: player.points,
+          payoutPercent: group.length ? combinedPct / group.length : 0,
+          estimatedWinnings: (baseCents + (index < remainder ? 1 : 0)) / 100
+        });
+      });
+
+      i = j;
+    }
+
+    return payouts;
+  }
+
   function renderMonthlyPeriod(periodKey) {
     if (!prizeData) return;
     const period = (prizeData.periods || []).find(p => p.periodKey === periodKey);
     if (!period) return;
 
-    const ruleLabel = period.ruleMode
-      ? period.ruleMode.charAt(0) + period.ruleMode.slice(1).toLowerCase()
-      : '';
-    setText('monthlyTitle', `${period.displayName}${ruleLabel ? ` - ${ruleLabel}` : ''}`);
+    setText('monthlyTitle', period.displayName || period.periodKey || 'Monthly Standings');
+
+    // Calculate the 60 / 25 / 15 payout directly from the selected
+    // period standings. This also makes the UI resilient to an older
+    // cached API response that used the former winner-take-all estimate.
+    const calculatedMonthlyWinnings = calculateRankedPayoutsClient_(
+      period.standings || [],
+      period.monthlyWinnerPool || 0
+    );
 
     const winnings = new Map(
-      (period.estimatedMonthlyWinnings || []).map(x => [x.name, x])
+      calculatedMonthlyWinnings.map(x => [x.name, x])
     );
 
     const body = $('monthlyStandingsBody');
