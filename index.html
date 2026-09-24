@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Perfect Pick 3.0</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="brand">
+        <div class="eyebrow">NFL Pick'Em</div>
+        <h1>Perfect Pick 3.0</h1>
+      </div>
+      <div class="header-actions">
+        <div id="status" class="status">Starting…</div>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <button class="active" data-tab="dashboard">Dashboard</button>
+      <button data-tab="picks">Picks</button>
+      <button data-tab="weekly">Weekly</button>
+      <button data-tab="monthly">Monthly</button>
+      <button data-tab="season">Season</button>
+      <button data-tab="prizes">Prizes</button>
+      <button data-tab="rules">Rules</button>
+      <button data-tab="faq">FAQ</button>
+    </nav>
+
+    <section id="dashboard" class="tab-panel active">
+      <div class="card-grid">
+        <div class="card"><span>Active Week</span><strong id="activeWeek">—</strong></div>
+        <div class="card"><span>Current Weekly Pot</span><strong id="weeklyPot">$0.00</strong></div>
+        <div class="card"><span>Monthly Rollover Pot</span><strong id="monthlyPot">$0.00</strong></div>
+        <div class="card"><span>Projected Season Pot</span><strong id="seasonPot">$0.00</strong><small id="confirmedSeasonPot" class="card-note"></small></div>
+      </div>
+
+      <div class="card-grid compact-grid" style="margin-top:14px">
+        <div class="card"><span>Prize Period</span><strong id="periodName">—</strong></div>
+        <div class="card"><span>Projected Monthly Prize (70%)</span><strong id="monthlyWinnerPool">$0.00</strong></div>
+      </div>
+      <div class="panel transparency-panel">
+        <h2>Where the Prize Money Comes From</h2>
+        <div id="prizeBreakdown" class="prize-breakdown"></div>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow">Current week</div>
+            <h2>Game Results</h2>
+          </div>
+          <span id="dashboardResultsWeek" class="pill new">Week —</span>
+        </div>
+        <div id="dashboardGameResults" class="dashboard-results-grid"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Recent Weeks</h2>
+        <table>
+          <thead><tr><th>Week</th><th>Pot</th><th>Status</th><th>Perfect Pick</th></tr></thead>
+          <tbody id="recentWeeks"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="picks" class="tab-panel">
+      <div class="panel picks-toolbar">
+        <div>
+          <div class="eyebrow">Weekly voting</div>
+          <h2 id="picksWeekTitle">Week — Picks</h2>
+          <p id="picksSubmissionCount" class="muted">Loading submissions…</p>
+        </div>
+        <label class="week-picker">
+          <span>Week</span>
+          <select id="weekSelect"></select>
+        </label>
+      </div>
+
+      <div class="panel">
+        <h2>Pick Percentages</h2>
+        <div id="pickPercentages" class="pick-percent-grid"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Player Picks</h2>
+        <div class="table-scroll">
+          <table id="playerPicksTable" class="wide-table">
+            <thead id="playerPicksHead"></thead>
+            <tbody id="playerPicksBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="weekly" class="tab-panel">
+      <div class="panel">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow">Weekly standings</div>
+            <h2 id="weeklyTitle">Week — Standings</h2>
+            <p id="weeklyStatusNote" class="muted"></p>
+          </div>
+          <label class="week-picker">
+            <span>Week</span>
+            <select id="weeklyWeekSelect"></select>
+          </label>
+        </div>
+        <table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th></tr></thead>
+          <tbody id="weeklyStandingsBody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow">Active week</div>
+            <h2>Game Results</h2>
+          </div>
+          <span id="weeklyResultsWeek" class="pill new">Week —</span>
+        </div>
+        <div id="weeklyGameResults" class="game-results-grid"></div>
+      </div>
+    </section>
+
+    <section id="monthly" class="tab-panel">
+      <div class="panel">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow">Prize period</div>
+            <h2 id="monthlyTitle">Monthly Standings</h2>
+            <p class="muted">Points from the selected prize period only. Estimated prize is based on that period's rollover pot.</p>
+          </div>
+          <label class="week-picker">
+            <span>Period</span>
+            <select id="monthlyPeriodSelect"></select>
+          </label>
+        </div>
+        <table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Est. Prize</th></tr></thead>
+          <tbody id="monthlyStandingsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="season" class="tab-panel">
+      <div class="panel">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow">Season</div>
+            <h2>Overall Season Standings</h2>
+            <p class="muted">Season-long points. Estimated winnings use the projected season pot.</p>
+          </div>
+        </div>
+        <table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th><th class="num">Est. Prize</th></tr></thead>
+          <tbody id="seasonStandingsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="prizes" class="tab-panel">
+      <div class="panel rule-mode-guide">
+        <div>
+          <div class="eyebrow">Prize rules</div>
+          <h2>Rule Set by Prize Period</h2>
+          <p class="muted">Each month shows both rule options. The rule currently being used for that period is highlighted.</p>
+        </div>
+        <div class="rule-choice-legend">
+          <span class="rule-choice sample">OLD</span>
+          <span class="rule-choice sample active">NEW</span>
+        </div>
+      </div>
+      <div id="periodCards" class="periods"></div>
+      <div class="panel">
+        <h2>Weekly Prize Tracker</h2>
+        <table>
+          <thead>
+            <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Final</th><th>Perfect Pick Winner(s)</th><th class="num">Monthly Rollover</th></tr>
+          </thead>
+          <tbody id="weeklyPrizeBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="rules" class="tab-panel">
+      <div class="panel">
+        <div class="eyebrow">How prizes work</div>
+        <h2>Perfect Pick Rules</h2>
+        <p class="muted">The active rule set for each prize period is shown on the Prizes tab.</p>
+      </div>
+
+      <div class="rule-cards">
+        <article class="rule-card">
+          <div class="rule-card-head">
+            <h3>New Rules</h3>
+            <span class="pill new">3.0</span>
+          </div>
+          <div class="rule-copy">
+            <p><strong>Weekly entry:</strong> $5 per active player.</p>
+            <p><strong>Perfect Pick:</strong> Pick every game correctly for the week.</p>
+            <p><strong>If one player gets a Perfect Pick:</strong> That player wins the full weekly pot.</p>
+            <p><strong>If multiple players get a Perfect Pick:</strong> They split the weekly pot evenly.</p>
+            <p><strong>If nobody gets a Perfect Pick:</strong> The full weekly pot rolls into that prize period's Monthly Pot.</p>
+            <p><strong>At the end of the prize period:</strong> 70% of the remaining Monthly Pot goes to the monthly standings winner(s), and 30% moves into the End-of-Season Pot.</p>
+            <p><strong>Season payout:</strong> 1st 60%, 2nd 25%, 3rd 15%, with tied positions combined and split evenly.</p>
+          </div>
+        </article>
+
+        <article class="rule-card muted-rule-card">
+          <div class="rule-card-head">
+            <h3>Old Rules</h3>
+            <span class="pill old">LEGACY</span>
+          </div>
+          <div class="rule-copy">
+            <p>The original/legacy rules have not been added to this dashboard yet.</p>
+            <p>Once the original rules are provided, they can be displayed here alongside the New Rules without changing any historical period data.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="tab-panel">
+      <div class="panel">
+        <div class="eyebrow">Player help</div>
+        <h2>Frequently Asked Questions</h2>
+        <p class="muted">Quick answers for using the Perfect Pick dashboard and understanding the prize tracker.</p>
+      </div>
+
+      <div class="faq">
+        <details open>
+          <summary>Where can I see my picks?</summary>
+          <p>Open the Picks tab. It defaults to the current week, and you can use the week dropdown to review earlier weeks.</p>
+        </details>
+        <details>
+          <summary>How do I see how everyone picked?</summary>
+          <p>The Picks tab shows every player's submitted picks plus the percentage of players who selected each team.</p>
+        </details>
+        <details>
+          <summary>When do correct and incorrect picks update?</summary>
+          <p>They update as game results in the Results sheet are marked Final. Winning/correct teams receive a subtle team-color highlight.</p>
+        </details>
+        <details>
+          <summary>What is a Perfect Pick?</summary>
+          <p>A Perfect Pick means a player correctly selected the winner of every game included in that week's form.</p>
+        </details>
+        <details>
+          <summary>Why does the Monthly Pot change?</summary>
+          <p>Under the New Rules, a finalized weekly pot rolls into the Monthly Pot when nobody gets a Perfect Pick that week.</p>
+        </details>
+        <details>
+          <summary>What does “Projected” prize money mean?</summary>
+          <p>Projected amounts show what the prize would be if the standings or prize period ended right now. They can change as more games and weeks are completed.</p>
+        </details>
+        <details>
+          <summary>Where can I see weekly, monthly, and season standings?</summary>
+          <p>Use the Weekly, Monthly, and Season tabs. Weekly and Monthly include selectors so you can review earlier weeks and prize periods.</p>
+        </details>
+        <details>
+          <summary>Where can I see which rule set is being used?</summary>
+          <p>Open the Prizes tab. Each prize period shows both Old and New rule options, with the active rule set highlighted.</p>
+        </details>
+        <details>
+          <summary>What happens if players are tied?</summary>
+          <p>Monthly winners split the monthly winner portion evenly. End-of-season ties combine the prize percentages for the positions occupied by the tie and split that combined percentage evenly.</p>
+        </details>
+        <details>
+          <summary>Why might the weekly pot change?</summary>
+          <p>The weekly pot is based on the number of active players for that week multiplied by the $5 entry amount.</p>
+        </details>
+      </div>
+    </section>
+
+    <footer class="footer">Perfect Pick 3.0 • Player-facing dashboard</footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
