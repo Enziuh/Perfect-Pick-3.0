@@ -392,7 +392,100 @@
       `${standings.length} submission${standings.length === 1 ? '' : 's'} for Week ${data.week}`;
 
     renderPickPercentages(games, standings, results);
+    renderTiebreakTransparency_(data);
     renderPlayerPicksTable(games, standings, results);
+  }
+
+
+  function renderTiebreakTransparency_(data) {
+    const tiebreak = data?.tiebreak || {};
+    if (!tiebreak.enabled) return;
+
+    const container = $('pickPercentages');
+    if (!container) return;
+
+    const standings = data?.standings || [];
+    const submitted = standings.filter(player => player.tiebreakSubmitted);
+    const game = String(tiebreak.game || 'Tiebreak game').trim();
+    const questionLabel = String(tiebreak.questionLabel || '').trim();
+
+    let actualTotal = null;
+    let actualScore = '';
+    let actualStatus = 'Pending';
+
+    const result = (data?.results || []).find(
+      r => normalizeGameLabel(r.game) === normalizeGameLabel(game)
+    );
+
+    if (result) {
+      actualStatus = String(result.status || 'Pending').trim();
+      const score1 = result.team1Score;
+      const score2 = result.team2Score;
+      const hasScores = score1 !== '' && score1 !== null && score1 !== undefined &&
+        score2 !== '' && score2 !== null && score2 !== undefined;
+
+      if (hasScores) {
+        const n1 = Number(score1);
+        const n2 = Number(score2);
+        if (Number.isFinite(n1) && Number.isFinite(n2)) {
+          actualScore = `${n1}–${n2}`;
+          if (String(actualStatus).toLowerCase() === 'final') {
+            actualTotal = n1 + n2;
+          }
+        }
+      }
+    }
+
+    let bodyHtml = '';
+
+    if (!tiebreak.revealed) {
+      bodyHtml = `
+        <div class="muted">
+          ${submitted.length} tiebreak prediction${submitted.length === 1 ? '' : 's'} submitted.
+          Predictions are hidden until picks close.
+        </div>
+      `;
+    } else if (!submitted.length) {
+      bodyHtml = '<div class="muted">No tiebreak predictions were submitted.</div>';
+    } else {
+      bodyHtml = `
+        <div style="display:grid;gap:8px;margin-top:10px;">
+          ${submitted.map(player => {
+            const prediction = Number(player.tiebreakPrediction);
+            const validPrediction = Number.isFinite(prediction);
+            const difference = validPrediction && actualTotal !== null
+              ? Math.abs(prediction - actualTotal)
+              : null;
+
+            return `
+              <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid rgba(20,122,95,.14);">
+                <strong>${escapeHtml(player.name)}</strong>
+                <span>
+                  ${validPrediction ? `${prediction} points` : '—'}
+                  ${difference !== null ? ` · Off by ${difference}` : ''}
+                </span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    const actualLabel = actualTotal !== null
+      ? `Final score ${escapeHtml(actualScore)} · Actual combined score: <strong>${actualTotal}</strong>`
+      : 'Actual combined score: Pending';
+
+    const html = `
+      <article class="pick-percent-card" style="grid-column:1/-1;">
+        <div class="eyebrow">TIEBREAKER TRANSPARENCY</div>
+        <div class="pick-game"><strong>${escapeHtml(game)}</strong></div>
+        ${questionLabel ? `<div class="muted" style="margin-top:4px;">${escapeHtml(questionLabel)}</div>` : ''}
+        <div style="margin-top:10px;">${actualLabel}</div>
+        ${bodyHtml}
+      </article>
+    `;
+
+    container.insertAdjacentHTML('afterbegin', html);
   }
 
   function resultForGame_(game, results) {
