@@ -933,3 +933,219 @@ details p{color:var(--muted);line-height:1.6;margin-bottom:4px}
 .standings-table tbody tr.rank-third:nth-child(odd){
   background:#f6fbf9;
 }
+
+/* =========================================================
+   3.0.5 - Scores + richer Picks colors
+   ========================================================= */
+
+/* Score display in Dashboard / Weekly result cards */
+.team-result-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+.team-result-score{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:30px;
+  font-size:18px;
+  line-height:1;
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  color:var(--text);
+}
+.team-result-score.empty-score{
+  color:var(--muted);
+  font-weight:700;
+}
+.compact-result-card .team-result-score{
+  font-size:16px;
+}
+.team-winner .team-result-score{
+  color:var(--team-color, var(--accent));
+}
+
+/* More team color in Pick Percentage cards */
+.pick-split{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.vote-option{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:34px;
+  padding:5px 9px;
+  border-radius:10px;
+  border:1px solid color-mix(in srgb, var(--team-color, var(--accent)) 28%, white);
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 7%, white);
+  color:var(--text);
+  text-decoration:none;
+}
+.vote-option strong{
+  color:var(--team-color, var(--accent));
+  font-weight:900;
+}
+.vote-winner{
+  border-color:color-mix(in srgb, var(--team-color, var(--accent)) 58%, white);
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 15%, white);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--team-color, var(--accent)) 12%, transparent);
+}
+.vote-team-badge,
+.winner-team-badge,
+.pick-team-badge,
+.pick-winner-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:30px;
+  height:22px;
+  padding:0 6px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb, var(--team-color, var(--accent)) 42%, white);
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 13%, white);
+  color:var(--team-color, var(--accent));
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.04em;
+  line-height:1;
+}
+.vote-check{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  background:var(--team-color, var(--accent));
+  color:white;
+  font-size:11px;
+  font-weight:900;
+}
+.pick-winner-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:max-content;
+  max-width:100%;
+  margin-top:10px;
+  padding:6px 9px;
+  border-radius:9px;
+  border-left:4px solid var(--team-color, var(--accent));
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 8%, white);
+  color:var(--text);
+  font-size:12px;
+}
+.pick-winner-line strong{
+  color:var(--team-color, var(--accent));
+}
+
+/* Player Picks matrix */
+.pick-cell{
+  vertical-align:top;
+  min-width:138px;
+  padding:8px !important;
+  transition:background .15s ease, border-color .15s ease;
+}
+.pick-cell-content{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.pick-team-line{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-height:24px;
+}
+.pick-team-line strong{
+  color:var(--text);
+  font-size:12px;
+}
+.pick-cell .pick-mark{
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:900;
+  text-decoration:none;
+}
+.pick-cell.correct{
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 12%, white) !important;
+  border-left:4px solid var(--team-color, var(--accent)) !important;
+  color:var(--text) !important;
+  text-decoration:none !important;
+}
+.pick-cell.correct .pick-mark{
+  background:var(--team-color, var(--accent));
+  color:white !important;
+}
+.pick-cell.wrong{
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 5%, white) !important;
+  border-left:4px solid #c83f49 !important;
+  color:var(--text) !important;
+  text-decoration:none !important;
+}
+.pick-cell.wrong .pick-mark{
+  background:#c83f49;
+  color:white !important;
+}
+.pick-cell.pending{
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 6%, white) !important;
+  border-left:3px solid color-mix(in srgb, var(--team-color, var(--accent)) 48%, white) !important;
+}
+.pick-cell.empty{
+  color:var(--muted);
+  text-align:center;
+}
+.pick-outcome{
+  min-height:22px;
+}
+.pick-outcome-winner{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:var(--team-color, var(--accent));
+  font-size:10px;
+  font-weight:800;
+  line-height:1.2;
+}
+.pick-outcome-pending{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+}
+.pick-winner-badge{
+  min-width:27px;
+  height:19px;
+  padding:0 5px;
+  font-size:8px;
+}
+
+/* Keep team colors visible on alternating rows and hover */
+.wide-table tbody tr:nth-child(even) .pick-cell.correct,
+.wide-table tbody tr:nth-child(even) .pick-cell.wrong,
+.wide-table tbody tr:nth-child(even) .pick-cell.pending,
+.wide-table tbody tr:hover .pick-cell.correct,
+.wide-table tbody tr:hover .pick-cell.wrong,
+.wide-table tbody tr:hover .pick-cell.pending{
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 9%, white) !important;
+}
+.wide-table tbody tr:nth-child(even) .pick-cell.correct,
+.wide-table tbody tr:hover .pick-cell.correct{
+  background:color-mix(in srgb, var(--team-color, var(--accent)) 14%, white) !important;
+}
+
+@media(max-width:760px){
+  .pick-cell{min-width:125px}
+  .pick-winner-line{width:100%}
+  .team-result-score{font-size:16px}
+}

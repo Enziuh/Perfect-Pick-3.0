@@ -273,15 +273,34 @@
   function renderWeekPicks(data) {
     const standings = data.standings || [];
     const games = data.games || [];
+    const results = data.results || [];
 
     $('picksSubmissionCount').textContent =
       `${standings.length} submission${standings.length === 1 ? '' : 's'} for Week ${data.week}`;
 
-    renderPickPercentages(games, standings);
-    renderPlayerPicksTable(games, standings);
+    renderPickPercentages(games, standings, results);
+    renderPlayerPicksTable(games, standings, results);
   }
 
-  function renderPickPercentages(games, standings) {
+  function resultForGame_(game, results) {
+    return (results || []).find(
+      result => normalizeGameLabel(result.game) === normalizeGameLabel(game)
+    ) || null;
+  }
+
+  function scoreDisplay_(value) {
+    return value === '' || value === null || value === undefined ? '' : String(value);
+  }
+
+  function resultScoreText_(result) {
+    if (!result) return '';
+    const score1 = scoreDisplay_(result.team1Score);
+    const score2 = scoreDisplay_(result.team2Score);
+    if (score1 === '' || score2 === '') return '';
+    return `${score1}–${score2}`;
+  }
+
+  function renderPickPercentages(games, standings, results) {
     if (!games.length) {
       $('pickPercentages').innerHTML = '<div class="muted">No games found for this week.</div>';
       return;
@@ -292,7 +311,9 @@
       let total = 0;
 
       standings.forEach(player => {
-        const pickObj = (player.picks || []).find(p => normalizeGameLabel(p.game) === normalizeGameLabel(game));
+        const pickObj = (player.picks || []).find(
+          p => normalizeGameLabel(p.game) === normalizeGameLabel(game)
+        );
         const pick = String(pickObj?.pick || '').trim();
         if (!pick) return;
 
@@ -300,40 +321,50 @@
         total++;
       });
 
-      const parts = [...votes.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-        .map(([team, count]) => {
-          const pct = total ? Math.round((count / total) * 100) : 0;
-          return `<strong>${escapeHtml(team)} ${pct}%</strong>`;
-        });
-
-      const winner = standings
-        .flatMap(p => p.picks || [])
-        .find(p => normalizeGameLabel(p.game) === normalizeGameLabel(game) && p.winner)?.winner || '';
-
-      const status = standings
-        .flatMap(p => p.picks || [])
-        .find(p => normalizeGameLabel(p.game) === normalizeGameLabel(game) && p.status)?.status || 'Pending';
+      const result = resultForGame_(game, results);
+      const winner = String(result?.winner || '').trim();
+      const status = String(result?.status || 'Pending').trim();
+      const scoreText = resultScoreText_(result);
 
       const displayParts = [...votes.entries()]
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([team, count]) => {
           const pct = total ? Math.round((count / total) * 100) : 0;
-          const isFinal = String(status || '').trim().toLowerCase() === 'final' && winner;
+          const isFinal = status.toLowerCase() === 'final' && winner;
           const won = isFinal && normalizeTeamLabel(team) === normalizeTeamLabel(winner);
-          const cls = won ? 'vote-winner' : 'vote-neutral';
-          const style = won ? teamColorStyle_(team) : '';
-          return `<strong class="${cls}" ${style ? `style="${style}"` : ''}>${escapeHtml(team)} ${pct}%</strong>`;
+          const cls = won ? 'vote-option vote-winner' : 'vote-option vote-team';
+          const style = teamColorStyle_(team);
+
+          return `
+            <span class="${cls}" style="${style}">
+              ${teamBadgeHtml_(team, true, 'vote-team-badge')}
+              <span>${escapeHtml(team)}</span>
+              <strong>${pct}%</strong>
+              ${won ? '<span class="vote-check">✓</span>' : ''}
+            </span>
+          `;
         });
+
+      const winnerLine = winner
+        ? `
+          <div class="pick-winner-line" style="${teamColorStyle_(winner)}">
+            ${teamBadgeHtml_(winner, true, 'winner-team-badge')}
+            <span>Winner: <strong>${escapeHtml(winner)}</strong>${scoreText ? ` • ${escapeHtml(scoreText)}` : ''}</span>
+          </div>
+        `
+        : '';
 
       return `
         <article class="pick-percent-card">
           <div class="pick-game">${matchupHeaderHtml_(game)}</div>
-          <div class="pick-split">${displayParts.length ? displayParts.join('<span class="divider"> | </span>') : '<span class="muted">No picks yet</span>'}</div>
+          <div class="pick-split">
+            ${displayParts.length
+              ? displayParts.join('')
+              : '<span class="muted">No picks yet</span>'}
+          </div>
+          ${winnerLine}
           <div class="pick-meta">
-            ${escapeHtml(status)}
-            ${winner ? ` • Winner: ${escapeHtml(winner)}` : ''}
-            • ${total} vote${total === 1 ? '' : 's'}
+            ${escapeHtml(status)} • ${total} vote${total === 1 ? '' : 's'}
           </div>
         </article>
       `;
@@ -342,7 +373,7 @@
     $('pickPercentages').innerHTML = cards.join('');
   }
 
-  function renderPlayerPicksTable(games, standings) {
+  function renderPlayerPicksTable(games, standings, results) {
     const head = `
       <tr>
         <th>Player</th>
@@ -352,7 +383,10 @@
 
     const body = standings.map(player => {
       const cells = games.map(game => {
-        const pick = (player.picks || []).find(p => normalizeGameLabel(p.game) === normalizeGameLabel(game));
+        const pick = (player.picks || []).find(
+          p => normalizeGameLabel(p.game) === normalizeGameLabel(game)
+        );
+        const result = resultForGame_(game, results);
 
         if (!pick || !pick.pick) {
           return '<td class="pick-cell empty">—</td>';
@@ -370,8 +404,33 @@
             ? '✕'
             : '';
 
-        const style = pick.correct === true ? teamColorStyle_(pick.pick) : '';
-        return `<td class="pick-cell ${cls}" ${style ? `style="${style}"` : ''}>${escapeHtml(pick.pick)}${marker ? `<span class="pick-mark">${marker}</span>` : ''}</td>`;
+        const pickedTeam = String(pick.pick || '').trim();
+        const winner = String(result?.winner || pick.winner || '').trim();
+        const scoreText = resultScoreText_(result);
+
+        const winnerDetail = winner
+          ? `
+            <span class="pick-outcome-winner" style="${teamColorStyle_(winner)}">
+              ${teamBadgeHtml_(winner, true, 'pick-winner-badge')}
+              <span>Winner: ${escapeHtml(winner)}${scoreText ? ` ${escapeHtml(scoreText)}` : ''}</span>
+            </span>
+          `
+          : '<span class="pick-outcome-pending">Waiting for result</span>';
+
+        return `
+          <td class="pick-cell ${cls}" style="${teamColorStyle_(pickedTeam)}">
+            <div class="pick-cell-content">
+              <div class="pick-team-line">
+                ${teamBadgeHtml_(pickedTeam, true, 'pick-team-badge')}
+                <strong>${escapeHtml(pickedTeam)}</strong>
+                ${marker ? `<span class="pick-mark">${marker}</span>` : ''}
+              </div>
+              <div class="pick-outcome">
+                ${winnerDetail}
+              </div>
+            </div>
+          </td>
+        `;
       }).join('');
 
       return `<tr><td class="player-name">${escapeHtml(player.name)}</td>${cells}</tr>`;
@@ -437,6 +496,7 @@
 
     const standings = weekData?.standings || [];
     const games = weekData?.games || [];
+    const results = weekData?.results || [];
 
     if (!games.length) {
       container.innerHTML = '<div class="muted">No games found for this week.</div>';
@@ -444,15 +504,22 @@
     }
 
     container.innerHTML = games.map(game => {
+      const result = resultForGame_(game, results);
+
+      // Backward compatibility while the updated Apps Script deployment rolls out.
       const pickRecords = standings.flatMap(p => p.picks || [])
         .filter(p => normalizeGameLabel(p.game) === normalizeGameLabel(game));
-
       const sample = pickRecords.find(p => p.status) || {};
-      const winner = String(sample.winner || '').trim();
-      const status = String(sample.status || 'Pending').trim();
+
+      const winner = String(result?.winner ?? sample.winner ?? '').trim();
+      const status = String(result?.status ?? sample.status ?? 'Pending').trim();
+
       const teams = String(game).split(/\s+vs\.?\s+/i);
-      const team1 = teams[0] || game;
-      const team2 = teams[1] || '';
+      const team1 = String(result?.team1 || teams[0] || game).trim();
+      const team2 = String(result?.team2 || teams[1] || '').trim();
+
+      const score1 = scoreDisplay_(result?.team1Score ?? sample.team1Score);
+      const score2 = scoreDisplay_(result?.team2Score ?? sample.team2Score);
 
       const t1Won = winner && normalizeTeamLabel(team1) === normalizeTeamLabel(winner);
       const t2Won = winner && normalizeTeamLabel(team2) === normalizeTeamLabel(winner);
@@ -460,21 +527,40 @@
       return `
         <article class="game-result-card ${compact ? 'compact-result-card' : ''}">
           <div class="game-result-status">${escapeHtml(status)}</div>
-          ${teamResultHtml_(team1, winner ? (t1Won ? 'winner' : 'loser') : 'pending')}
-          ${teamResultHtml_(team2, winner ? (t2Won ? 'winner' : 'loser') : 'pending')}
+          ${teamResultHtml_(
+            team1,
+            score1,
+            winner ? (t1Won ? 'winner' : 'loser') : 'pending'
+          )}
+          ${teamResultHtml_(
+            team2,
+            score2,
+            winner ? (t2Won ? 'winner' : 'loser') : 'pending'
+          )}
         </article>
       `;
     }).join('');
   }
 
-  function teamResultHtml_(team, state) {
-    const style = state === 'winner' ? teamColorStyle_(team) : '';
-    const cls = state === 'winner' ? 'team-winner' : 'team-neutral';
-    const label = state === 'winner' ? 'WIN' : state === 'loser' ? 'LOSS' : '—';
+  function teamResultHtml_(team, score, state) {
+    const highlighted = state === 'winner';
+    const style = highlighted ? teamColorStyle_(team) : '';
+    const cls = highlighted ? 'team-winner' : 'team-neutral';
+    const outcomeLabel = state === 'winner' ? 'WIN' : state === 'loser' ? 'LOSS' : '';
+    const scoreHtml = score === ''
+      ? '<span class="team-result-score empty-score">—</span>'
+      : `<span class="team-result-score">${escapeHtml(score)}</span>`;
+
     return `
       <div class="team-result ${cls}" ${style ? `style="${style}"` : ''}>
-        <span class="team-result-name">${teamBadgeHtml_(team, state === 'winner', 'team-result-badge')}<span>${escapeHtml(team)}</span></span>
-        <strong>${label}</strong>
+        <span class="team-result-name">
+          ${teamBadgeHtml_(team, highlighted, 'team-result-badge')}
+          <span>${escapeHtml(team)}</span>
+        </span>
+        <span class="team-result-right">
+          ${scoreHtml}
+          ${outcomeLabel ? `<strong>${outcomeLabel}</strong>` : ''}
+        </span>
       </div>
     `;
   }
