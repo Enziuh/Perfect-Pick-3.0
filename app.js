@@ -241,15 +241,17 @@
   }
 
   function tiebreakStatusHtml_(period, weekData) {
-  return `
-    <div class="monthly-tiebreak-note">
-      <strong>Tiebreaker:</strong>
-      Falcons vs Saints ·
-      Final score 24–20 ·
-      <strong>Combined score: 44</strong>
-    </div>
-  `;
-}
+    const tiebreak = period?.tiebreakRule || {};
+    const game = tiebreak.game || 'Final game';
+    const actual = tiebreakActualFromWeek_(period, weekData);
+    const isFinal = String(actual.status || '').toLowerCase() === 'final';
+
+    if (isFinal && actual.actualTotal !== null) {
+      return `<div class="monthly-tiebreak-note"><strong>Tiebreaker:</strong> ${escapeHtml(game)} · Final score ${escapeHtml(actual.score)} · <strong>Combined score: ${actual.actualTotal}</strong></div>`;
+    }
+
+    return `<div class="monthly-tiebreak-note"><strong>Tiebreaker:</strong> ${escapeHtml(game)} · Combined score: Pending</div>`;
+  }
 
   async function renderMonthlyPeriod(periodKey) {
     if (!prizeData) return;
@@ -280,14 +282,9 @@
           ? `${leaders.map(escapeHtml).join(', ')} are currently tied for 1st place`
           : 'No current leader yet';
 
-      const tieMessage = `
-  If the period ends with multiple players tied for 1st, the tiebreaker is:
-  <strong>${escapeHtml(questionLabel)}</strong>
-  <br><br>
-  <strong>TEST RESULT:</strong>
-  Falcons vs Saints · Final score 24–20 ·
-  <strong>Combined score: 44</strong>
-`;
+      const tieMessage = leaders.length > 1
+        ? `If the period ended tied, the tied 1st-place players would use: <strong>${escapeHtml(questionLabel)}</strong>. Closest combined-points prediction wins the monthly prize.`
+        : `If the period ends with multiple players tied for 1st, the tiebreaker is: <strong>${escapeHtml(questionLabel)}</strong>.`;
 
       monthlyPrizeCallout.innerHTML = `
         <span class="monthly-prize-label">Current 1st Place Prize</span>
