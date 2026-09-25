@@ -4,6 +4,7 @@
   let activeWeek = null;
   let prizeData = null;
   const weekCache = new Map();
+  let deadlineTimer = null;
 
   const $ = (id) => document.getElementById(id);
   const setText = (id, value) => {
@@ -29,8 +30,110 @@
     el.className = `status ${type}`.trim();
   }
 
+  function formatPacificDateTime_(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '—';
+
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    }).format(date);
+  }
+
+  function pacificWeekday_(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      weekday: 'long'
+    }).format(date);
+  }
+
+  function countdownText_(deadlineValue) {
+    if (!deadlineValue) return 'Deadline not scheduled';
+    const deadline = new Date(deadlineValue);
+    if (Number.isNaN(deadline.getTime())) return 'Deadline not scheduled';
+
+    const diff = deadline.getTime() - Date.now();
+    if (diff <= 0) return 'Deadline reached';
+
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (days > 0) return `${days}d ${hours}h ${minutes}m remaining`;
+    if (hours > 0) return `${hours}h ${minutes}m ${seconds}s remaining`;
+    return `${minutes}m ${seconds}s remaining`;
+  }
+
+  function renderFormControl_(control) {
+    const data = control || {};
+    const week = Number(data.activeWeek || 0);
+    const status = String(data.status || '').trim().toUpperCase();
+    const closeAt = data.picksClose || '';
+    const kickoffAt = data.firstKickoff || '';
+
+    setText('formWeekLabel', week ? `Week ${week} Picks` : 'Picks');
+    setText('picksCloseTime', formatPacificDateTime_(closeAt));
+    setText('firstGameLabel', data.firstGame || '—');
+    setText('firstKickoffTime', kickoffAt ? `Kickoff: ${formatPacificDateTime_(kickoffAt)}` : '—');
+    setText('deadlineRuleLabel', data.deadlineRule || '3 hours before first kickoff');
+
+    const badge = $('formStatusBadge');
+    if (badge) {
+      badge.className = 'deadline-status';
+      if (status === 'OPEN') {
+        badge.textContent = 'Picks Open';
+        badge.classList.add('is-open');
+      } else if (status === 'CLOSED') {
+        badge.textContent = 'Picks Closed';
+        badge.classList.add('is-closed');
+      } else {
+        badge.textContent = 'Not Scheduled';
+        badge.classList.add('is-unknown');
+      }
+    }
+
+    const updateCountdown = () => {
+      const el = $('picksCountdown');
+      if (!el) return;
+      const text = countdownText_(closeAt);
+      el.textContent = status === 'CLOSED' ? 'Entries are closed' : text;
+      el.classList.toggle('deadline-passed', text === 'Deadline reached');
+    };
+
+    if (deadlineTimer) clearInterval(deadlineTimer);
+    updateCountdown();
+    if (closeAt && status !== 'CLOSED') {
+      deadlineTimer = setInterval(updateCountdown, 1000);
+    }
+
+    const notice = $('deadlineNotice');
+    if (notice) {
+      const firstGameDay = pacificWeekday_(kickoffAt);
+      if (firstGameDay && firstGameDay !== 'Thursday') {
+        notice.hidden = false;
+        notice.innerHTML = `<strong>Early schedule this week:</strong> the first game is ${escapeHtml(firstGameDay)}, so picks close ${escapeHtml(formatPacificDateTime_(closeAt))}.`;
+      } else {
+        notice.hidden = true;
+        notice.textContent = '';
+      }
+    }
+  }
+
   function renderDashboard(prizes) {
     setText('activeWeek', prizes.activeWeek || '—');
+    renderFormControl_(prizes.formControl);
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
     setText('weeklyPot', money(prizes.currentWeeklyPot));

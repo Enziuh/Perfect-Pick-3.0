@@ -31,7 +31,7 @@
 
     <section id="dashboard" class="tab-panel active">
       <div class="card-grid">
-        <div class="card"><span>Active Week</span><strong id="activeWeek">—</strong></div>
+        <div class="card"><span>Current Results Week</span><strong id="activeWeek">—</strong></div>
         <div class="card"><span>Current Weekly Pot</span><strong id="weeklyPot">$0.00</strong></div>
         <div class="card"><span>Monthly Rollover Pot</span><strong id="monthlyPot">$0.00</strong></div>
         <div class="card"><span>Projected Season Pot</span><strong id="seasonPot">$0.00</strong><small id="confirmedSeasonPot" class="card-note"></small></div>
@@ -40,6 +40,36 @@
       <div class="card-grid compact-grid" style="margin-top:14px">
         <div class="card"><span>Prize Period</span><strong id="periodName">—</strong></div>
         <div class="card"><span>Monthly 1st Place Pool (50%)</span><strong id="monthlyWinnerPool">$0.00</strong></div>
+      </div>
+
+      <div class="panel picks-deadline-panel" id="picksDeadlinePanel">
+        <div class="deadline-panel-head">
+          <div>
+            <div class="eyebrow">Weekly entry window</div>
+            <h2><span id="formWeekLabel">Picks</span> Deadline</h2>
+          </div>
+          <span id="formStatusBadge" class="deadline-status is-unknown">Checking…</span>
+        </div>
+
+        <div class="deadline-grid">
+          <div class="deadline-main">
+            <span class="deadline-label">Picks close</span>
+            <strong id="picksCloseTime">—</strong>
+            <span id="picksCountdown" class="deadline-countdown">—</span>
+          </div>
+          <div class="deadline-detail">
+            <span>First game</span>
+            <strong id="firstGameLabel">—</strong>
+            <small id="firstKickoffTime">—</small>
+          </div>
+          <div class="deadline-detail">
+            <span>Deadline rule</span>
+            <strong id="deadlineRuleLabel">3 hours before first kickoff</strong>
+            <small>Schedule is checked when the week is created.</small>
+          </div>
+        </div>
+
+        <div id="deadlineNotice" class="deadline-notice" hidden></div>
       </div>
       <div class="panel transparency-panel">
         <h2>Where the Prize Money Comes From</h2>

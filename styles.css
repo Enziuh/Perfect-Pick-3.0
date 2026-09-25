@@ -1197,3 +1197,117 @@ details p{color:var(--muted);line-height:1.6;margin-bottom:4px}
   color:var(--text);
   font-weight:800;
 }
+
+/* =========================================================
+   WEEKLY PICKS DEADLINE / FORM STATUS
+   ========================================================= */
+.picks-deadline-panel{
+  overflow:hidden;
+  background:linear-gradient(135deg,#ffffff 0%,#f4faf7 100%);
+  border-color:#cfe0db;
+}
+.deadline-panel-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.deadline-panel-head h2{margin:4px 0 0}
+.deadline-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+.deadline-status.is-open{
+  color:#0f6b52;
+  background:#eaf8f2;
+  border-color:#b8dfd2;
+}
+.deadline-status.is-closed{
+  color:#9d2f2f;
+  background:#fff0f0;
+  border-color:#ebc4c4;
+}
+.deadline-status.is-unknown{
+  color:var(--muted);
+  background:var(--panel2);
+}
+.deadline-grid{
+  display:grid;
+  grid-template-columns:1.25fr 1fr 1fr;
+  gap:12px;
+}
+.deadline-main,.deadline-detail{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  background:rgba(255,255,255,.82);
+}
+.deadline-main{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.deadline-label,.deadline-detail>span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.deadline-main strong{
+  display:block;
+  margin-top:6px;
+  font-size:clamp(20px,3vw,29px);
+  line-height:1.15;
+}
+.deadline-countdown{
+  display:block;
+  margin-top:7px;
+  color:var(--accent);
+  font-size:14px;
+  font-weight:900;
+}
+.deadline-countdown.deadline-passed{color:var(--danger)}
+.deadline-detail strong{
+  display:block;
+  margin-top:7px;
+  font-size:16px;
+}
+.deadline-detail small{
+  display:block;
+  margin-top:6px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.deadline-notice{
+  margin-top:12px;
+  padding:11px 13px;
+  border-radius:12px;
+  border:1px solid #e8cf91;
+  background:#fff8e6;
+  color:#785719;
+  font-size:13px;
+  line-height:1.45;
+}
+.deadline-notice[hidden]{display:none}
+
+@media(max-width:850px){
+  .deadline-grid{grid-template-columns:1fr 1fr}
+  .deadline-main{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .deadline-grid{grid-template-columns:1fr}
+  .deadline-main{grid-column:auto}
+  .deadline-status{width:100%}
+}
