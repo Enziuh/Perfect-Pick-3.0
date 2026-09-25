@@ -112,6 +112,31 @@
 
     setText('monthlyTitle', period.displayName || period.periodKey || 'Monthly Standings');
 
+    const monthlyPrizeCallout = $('monthlyPrizeCallout');
+    if (monthlyPrizeCallout) {
+      const prizeAmount = money(period.monthlyWinnerPool || 0);
+      const leaders = period.leaders || [];
+      const tiebreak = period.tiebreakRule || {};
+      const questionLabel = tiebreak.questionLabel || `WK ${period.endWeek} Tie Breaker — Final Game — Enter Combined Score`;
+
+      const leaderLabel = leaders.length === 1
+        ? `${escapeHtml(leaders[0])} is currently in 1st place`
+        : leaders.length > 1
+          ? `${leaders.map(escapeHtml).join(', ')} are currently tied for 1st place`
+          : 'No current leader yet';
+
+      const tieMessage = leaders.length > 1
+        ? `If the period ended tied, the tied 1st-place players would need to answer: <strong>${escapeHtml(questionLabel)}</strong>. Closest combined-points prediction wins the monthly prize.`
+        : `If the period ends with multiple players tied for 1st, only the tied players will need to answer: <strong>${escapeHtml(questionLabel)}</strong>.`;
+
+      monthlyPrizeCallout.innerHTML = `
+        <span class="monthly-prize-label">Current 1st Place Prize</span>
+        <strong>${prizeAmount}</strong>
+        <small>${leaderLabel}</small>
+        <div class="monthly-tiebreak-note">${tieMessage}</div>
+      `;
+    }
+
     const body = $('monthlyStandingsBody');
     if (body) {
       body.innerHTML = (period.standings || []).map(p => {

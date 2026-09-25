@@ -139,7 +139,8 @@
           <div>
             <div class="eyebrow">Prize period</div>
             <h2 id="monthlyTitle">Monthly Standings</h2>
-            <p class="muted">Points from the selected prize period only. The monthly 1st-place pool is shown on the Dashboard and Prizes tabs.</p>
+            <p class="muted">Points from the selected prize period only.</p>
+            <div id="monthlyPrizeCallout" class="monthly-prize-callout" aria-live="polite"></div>
           </div>
           <label class="week-picker">
             <span>Period</span>
@@ -213,9 +214,10 @@
             <p><strong>If multiple players get a Perfect Pick:</strong> They split the weekly pot evenly.</p>
             <p><strong>If nobody gets a Perfect Pick:</strong> The full weekly pot rolls into that prize period's Monthly Pot.</p>
             <p><strong>At the end of the prize period:</strong> 50% of the remaining Monthly Pot becomes the 1st-place monthly prize pool, and 50% moves into the End-of-Season Pot.</p>
-            <p><strong>Monthly standings payout:</strong> The 50% monthly share is reserved for 1st place. Final tie/winner handling will be confirmed before payouts are finalized.</p>
+            <p><strong>Monthly standings payout:</strong> The 50% monthly share goes to one 1st-place winner.</p>
             <p><strong>Season payout:</strong> The End-of-Season Pot keeps accumulating. The final payout structure (for example Top 3 or Top 5) will be decided later.</p>
-            <p><strong>Ties:</strong> Weekly Perfect Pick ties split the weekly pot evenly. Monthly and season tie rules are still being finalized.</p>
+            <p><strong>Monthly 1st-place tie:</strong> Tied 1st-place players answer a separate combined-points question for the final game of the prize period (WK 4, 8, 12, 16, or 18). Closest prediction to the actual combined score wins the monthly prize.</p>
+            <p><strong>Weekly ties:</strong> Weekly Perfect Pick ties still split the weekly pot evenly. Season payout/tie rules will be decided later.</p>
           </div>
         </article>
 
@@ -266,7 +268,7 @@
         </details>
         <details>
           <summary>How is the monthly standings prize paid?</summary>
-          <p>At the end of a prize period, 50% of the Monthly Pot is reserved for the monthly 1st-place prize and 50% moves to the End-of-Season Pot. Final monthly tie handling is still being decided.</p>
+          <p>At the end of a prize period, 50% of the Monthly Pot is reserved for one monthly 1st-place winner and 50% moves to the End-of-Season Pot. If 1st place is tied, the tied players use the combined-points tiebreaker for the final game of that period.</p>
         </details>
         <details>
           <summary>What does “Projected” prize money mean?</summary>
@@ -286,7 +288,7 @@
         </details>
         <details>
           <summary>What happens if players are tied?</summary>
-          <p>Weekly Perfect Pick winners split that week's pot evenly. Monthly and season tie rules are still being finalized; the dashboard will not assume a payout split until those rules are confirmed.</p>
+          <p>Weekly Perfect Pick winners split that week's pot evenly. A monthly 1st-place tie is decided by the combined-points tiebreaker for the final game of the period. Season payout and season tie rules will be decided later.</p>
         </details>
         <details>
           <summary>Why might the weekly pot change?</summary>
