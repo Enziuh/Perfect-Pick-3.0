@@ -280,9 +280,14 @@
           ? `${leaders.map(escapeHtml).join(', ')} are currently tied for 1st place`
           : 'No current leader yet';
 
-      const tieMessage = leaders.length > 1
-        ? `If the period ended tied, the tied 1st-place players would use: <strong>${escapeHtml(questionLabel)}</strong>. Closest combined-points prediction wins the monthly prize.`
-        : `If the period ends with multiple players tied for 1st, the tiebreaker is: <strong>${escapeHtml(questionLabel)}</strong>.`;
+      const tieMessage = `
+  If the period ends with multiple players tied for 1st, the tiebreaker is:
+  <strong>${escapeHtml(questionLabel)}</strong>
+  <br><br>
+  <strong>TEST RESULT:</strong>
+  Falcons vs Saints · Final score 24–20 ·
+  <strong>Combined score: 44</strong>
+`;
 
       monthlyPrizeCallout.innerHTML = `
         <span class="monthly-prize-label">Current 1st Place Prize</span>
