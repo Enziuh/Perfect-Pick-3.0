@@ -47,7 +47,7 @@
       .join(' + ');
 
     const monthlyBase = rolloverLines || 'No finalized weekly rollovers yet';
-    const projectedSeasonContribution = Number(prizes.currentMonthlyPot || 0) * 0.30;
+    const projectedSeasonContribution = Number(prizes.currentMonthlyPot || 0) * 0.50;
     $('prizeBreakdown').innerHTML = `
       <div class="breakdown-row">
         <span>Monthly rollover pot</span>
@@ -58,13 +58,13 @@
       <div class="breakdown-row">
         <span>Monthly prize portion</span>
         <strong>${money(prizes.projectedMonthlyWinnerPool)}</strong>
-        <small>70% of the monthly rollover pot</small>
+        <small>50% of the monthly rollover pot</small>
       </div>
       <div class="breakdown-arrow">+</div>
       <div class="breakdown-row">
         <span>Season pot portion</span>
         <strong>${money(projectedSeasonContribution)}</strong>
-        <small>30% of the monthly rollover pot</small>
+        <small>50% of the monthly rollover pot</small>
       </div>
     `;
 
@@ -89,14 +89,9 @@
   function renderStandings(prizes) {
     renderMonthlyPeriod(prizes.currentPeriod);
 
-    const seasonWinnings = new Map(
-      (prizes.estimatedSeasonWinnings || []).map(x => [x.name, x])
-    );
-
     const seasonBody = $('seasonStandingsBody');
     if (seasonBody) {
       seasonBody.innerHTML = (prizes.overallStandings || []).map(p => {
-        const est = seasonWinnings.get(p.name);
         const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
         return `
           <tr class="${rankClass}">
@@ -104,56 +99,10 @@
             <td class="player-name-cell">${escapeHtml(p.name)}</td>
             <td class="num"><strong>${p.points}</strong></td>
             <td class="num">${p.completedGames}</td>
-            <td class="num prize-cell">${money(est?.estimatedWinnings || 0)}</td>
           </tr>
         `;
-      }).join('') || '<tr><td colspan="5">No season standings yet.</td></tr>';
+      }).join('') || '<tr><td colspan="4">No season standings yet.</td></tr>';
     }
-  }
-
-  function calculateRankedPayoutsClient_(standings, prizePool) {
-    const rows = Array.isArray(standings) ? standings : [];
-    const pool = Number(prizePool || 0);
-    if (!rows.length || pool <= 0) return [];
-
-    const pctByPosition = { 1: 60, 2: 25, 3: 15 };
-    const payouts = [];
-    let i = 0;
-
-    while (i < rows.length) {
-      const points = Number(rows[i].points || 0);
-      const group = [];
-      let j = i;
-
-      while (j < rows.length && Number(rows[j].points || 0) === points) {
-        group.push(rows[j]);
-        j++;
-      }
-
-      const startPosition = i + 1;
-      let combinedPct = 0;
-      for (let pos = startPosition; pos < startPosition + group.length; pos++) {
-        combinedPct += pctByPosition[pos] || 0;
-      }
-
-      const groupCents = Math.round(pool * combinedPct);
-      const baseCents = group.length ? Math.floor(groupCents / group.length) : 0;
-      const remainder = group.length ? groupCents - (baseCents * group.length) : 0;
-
-      group.forEach((player, index) => {
-        payouts.push({
-          name: player.name,
-          rank: player.rank,
-          points: player.points,
-          payoutPercent: group.length ? combinedPct / group.length : 0,
-          estimatedWinnings: (baseCents + (index < remainder ? 1 : 0)) / 100
-        });
-      });
-
-      i = j;
-    }
-
-    return payouts;
   }
 
   function renderMonthlyPeriod(periodKey) {
@@ -163,32 +112,18 @@
 
     setText('monthlyTitle', period.displayName || period.periodKey || 'Monthly Standings');
 
-    // Calculate the 60 / 25 / 15 payout directly from the selected
-    // period standings. This also makes the UI resilient to an older
-    // cached API response that used the former winner-take-all estimate.
-    const calculatedMonthlyWinnings = calculateRankedPayoutsClient_(
-      period.standings || [],
-      period.monthlyWinnerPool || 0
-    );
-
-    const winnings = new Map(
-      calculatedMonthlyWinnings.map(x => [x.name, x])
-    );
-
     const body = $('monthlyStandingsBody');
     if (body) {
       body.innerHTML = (period.standings || []).map(p => {
-        const est = winnings.get(p.name);
         const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
         return `
           <tr class="${rankClass}">
             <td><span class="rank-badge">${p.rank}</span></td>
             <td class="player-name-cell">${escapeHtml(p.name)}</td>
             <td class="num"><strong>${p.points}</strong></td>
-            <td class="num prize-cell">${money(est?.estimatedWinnings || 0)}</td>
           </tr>
         `;
-      }).join('') || '<tr><td colspan="4">No standings for this period yet.</td></tr>';
+      }).join('') || '<tr><td colspan="3">No standings for this period yet.</td></tr>';
     }
   }
 
@@ -208,13 +143,8 @@
         <div class="period-grid">
           <div><span>Weeks</span><strong>${p.startWeek}–${p.endWeek}</strong></div>
           <div><span>Monthly Pot</span><strong>${money(p.monthlyPot)}</strong></div>
-          <div><span>Monthly Prize Pool (70%)</span><strong>${money(p.monthlyWinnerPool)}</strong></div>
-          <div><span>Season Contribution (30%)</span><strong>${money(p.seasonContribution)}</strong></div>
-        </div>
-        <div class="monthly-payout-strip">
-          <span><small>1st</small><strong>${money((p.monthlyWinnerPool || 0) * 0.60)}</strong></span>
-          <span><small>2nd</small><strong>${money((p.monthlyWinnerPool || 0) * 0.25)}</strong></span>
-          <span><small>3rd</small><strong>${money((p.monthlyWinnerPool || 0) * 0.15)}</strong></span>
+          <div><span>Monthly 1st Place Pool (50%)</span><strong>${money(p.monthlyWinnerPool)}</strong></div>
+          <div><span>Season Contribution (50%)</span><strong>${money(p.seasonContribution)}</strong></div>
         </div>
         <p class="muted">
           ${p.leaders.length

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Perfect Pick 3.0</title>
-  <link rel="stylesheet" href="styles.css?v=20260925a">
+  <link rel="stylesheet" href="styles.css?v=20260925b">
 </head>
 <body>
   <main class="shell">
@@ -39,7 +39,7 @@
 
       <div class="card-grid compact-grid" style="margin-top:14px">
         <div class="card"><span>Prize Period</span><strong id="periodName">—</strong></div>
-        <div class="card"><span>Projected Monthly Prize (70%)</span><strong id="monthlyWinnerPool">$0.00</strong></div>
+        <div class="card"><span>Monthly 1st Place Pool (50%)</span><strong id="monthlyWinnerPool">$0.00</strong></div>
       </div>
       <div class="panel transparency-panel">
         <h2>Where the Prize Money Comes From</h2>
@@ -139,7 +139,7 @@
           <div>
             <div class="eyebrow">Prize period</div>
             <h2 id="monthlyTitle">Monthly Standings</h2>
-            <p class="muted">Points from the selected prize period only. Estimated prize is based on that period's rollover pot.</p>
+            <p class="muted">Points from the selected prize period only. The monthly 1st-place pool is shown on the Dashboard and Prizes tabs.</p>
           </div>
           <label class="week-picker">
             <span>Period</span>
@@ -147,7 +147,7 @@
           </label>
         </div>
         <table class="striped-table standings-table responsive-table">
-          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Est. Prize</th></tr></thead>
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th></tr></thead>
           <tbody id="monthlyStandingsBody"></tbody>
         </table>
       </div>
@@ -159,11 +159,11 @@
           <div>
             <div class="eyebrow">Season</div>
             <h2>Overall Season Standings</h2>
-            <p class="muted">Season-long points. Estimated winnings use the projected season pot.</p>
+            <p class="muted">Season-long points. Final season payout structure will be decided later.</p>
           </div>
         </div>
         <table class="striped-table standings-table responsive-table">
-          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th><th class="num">Est. Prize</th></tr></thead>
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th></tr></thead>
           <tbody id="seasonStandingsBody"></tbody>
         </table>
       </div>
@@ -212,10 +212,10 @@
             <p><strong>If one player gets a Perfect Pick:</strong> That player wins the full weekly pot.</p>
             <p><strong>If multiple players get a Perfect Pick:</strong> They split the weekly pot evenly.</p>
             <p><strong>If nobody gets a Perfect Pick:</strong> The full weekly pot rolls into that prize period's Monthly Pot.</p>
-            <p><strong>At the end of the prize period:</strong> 70% of the remaining Monthly Pot becomes the monthly standings prize pool, and 30% moves into the End-of-Season Pot.</p>
-            <p><strong>Monthly standings payout:</strong> 1st receives 60%, 2nd receives 25%, and 3rd receives 15% of the monthly standings prize pool.</p>
-            <p><strong>Season payout:</strong> 1st receives 60%, 2nd receives 25%, and 3rd receives 15% of the End-of-Season Pot.</p>
-            <p><strong>Ties:</strong> Monthly and season ties use the same occupied-position rule. The percentages for the tied positions are combined and split evenly among the tied players. Weekly Perfect Pick ties split the weekly pot evenly.</p>
+            <p><strong>At the end of the prize period:</strong> 50% of the remaining Monthly Pot becomes the 1st-place monthly prize pool, and 50% moves into the End-of-Season Pot.</p>
+            <p><strong>Monthly standings payout:</strong> The 50% monthly share is reserved for 1st place. Final tie/winner handling will be confirmed before payouts are finalized.</p>
+            <p><strong>Season payout:</strong> The End-of-Season Pot keeps accumulating. The final payout structure (for example Top 3 or Top 5) will be decided later.</p>
+            <p><strong>Ties:</strong> Weekly Perfect Pick ties split the weekly pot evenly. Monthly and season tie rules are still being finalized.</p>
           </div>
         </article>
 
@@ -230,7 +230,7 @@
             <p><strong>If one player got a Perfect Pick:</strong> That player won the full weekly pot.</p>
             <p><strong>If multiple players got a Perfect Pick:</strong> They split the weekly pot evenly.</p>
             <p><strong>If nobody got a Perfect Pick:</strong> The entire weekly pot went directly into the End-of-Season Pot.</p>
-            <p><strong>No monthly payout:</strong> Under the Old Rules there was no monthly standings prize or 70/30 monthly split.</p>
+            <p><strong>No monthly payout:</strong> Under the Old Rules there was no monthly standings prize or 50/50 monthly split.</p>
           </div>
         </article>
       </div>
@@ -266,11 +266,11 @@
         </details>
         <details>
           <summary>How is the monthly standings prize paid?</summary>
-          <p>At the end of a prize period, 70% of the Monthly Pot becomes the monthly standings prize pool. That pool is paid 60% to 1st place, 25% to 2nd place, and 15% to 3rd place. Ties use the same occupied-position split used for the season standings.</p>
+          <p>At the end of a prize period, 50% of the Monthly Pot is reserved for the monthly 1st-place prize and 50% moves to the End-of-Season Pot. Final monthly tie handling is still being decided.</p>
         </details>
         <details>
           <summary>What does “Projected” prize money mean?</summary>
-          <p>Projected amounts show what the prize would be if the standings or prize period ended right now. They can change as more games and weeks are completed.</p>
+          <p>Projected pot amounts show how much money has accumulated under the current 50/50 rules. Season player payouts are intentionally not projected yet.</p>
         </details>
         <details>
           <summary>Where can I see weekly, monthly, and season standings?</summary>
@@ -282,11 +282,11 @@
         </details>
         <details>
           <summary>What is the difference between the Old and New Rules?</summary>
-          <p>Both rule sets pay the weekly pot for a Perfect Pick. Under the Old Rules, a week with no Perfect Pick sends the entire weekly pot directly to the End-of-Season Pot. Under the New Rules, that weekly pot rolls into the Monthly Pot; 70% of the monthly pot becomes the monthly standings prize pool and 30% goes to the End-of-Season Pot.</p>
+          <p>Both rule sets pay the weekly pot for a Perfect Pick. Under the Old Rules, a week with no Perfect Pick sends the entire weekly pot directly to the End-of-Season Pot. Under the New Rules, that weekly pot rolls into the Monthly Pot; 50% of the monthly pot is reserved for monthly 1st place and 50% goes to the End-of-Season Pot.</p>
         </details>
         <details>
           <summary>What happens if players are tied?</summary>
-          <p>Ties are handled consistently across Perfect Pick. Weekly Perfect Pick winners split that week's pot evenly. For Monthly and Season standings, tied players combine the payout percentages for the positions they occupy and split that combined amount evenly. For example, a two-way tie for 1st combines 1st and 2nd place (60% + 25% = 85%), so each tied player receives 42.5%, and the next player receives the 15% third-place share.</p>
+          <p>Weekly Perfect Pick winners split that week's pot evenly. Monthly and season tie rules are still being finalized; the dashboard will not assume a payout split until those rules are confirmed.</p>
         </details>
         <details>
           <summary>Why might the weekly pot change?</summary>
@@ -298,7 +298,7 @@
     <footer class="footer">Perfect Pick 3.0 • Player-facing dashboard</footer>
   </main>
 
-  <script src="config.js?v=20260925a"></script>
-  <script src="app.js?v=20260925a"></script>
+  <script src="config.js?v=20260925b"></script>
+  <script src="app.js?v=20260925b"></script>
 </body>
 </html>
